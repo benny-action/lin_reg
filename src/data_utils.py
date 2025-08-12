@@ -46,3 +46,17 @@ def generate_housing_data(n_samples=1000):
         })
 
     return data
+
+def explore_data(data):
+    """
+    Visualise the data, understand the data.
+    """
+    fig, axes = plt.subplots(2, 3, figsize = (15, 10))
+    fig.suptitle('Housing Data Exploration', fontsize=16)
+    
+    #price distribution
+    #sqfootage vs price
+    #bedrooms v price
+    #age v price
+    #location v price
+    #correlation heatmap?
