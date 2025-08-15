@@ -55,8 +55,49 @@ def explore_data(data):
     fig.suptitle('Housing Data Exploration', fontsize=16)
     
     #price distribution
+    axes[0, 0].hist(data['price'], bins=30, alpha=0.7, color='skyblue')
+    axes[0, 0].set_title('Price Distribution')
+    axes[0, 0].set_xlabel('Price ($)')
+    axes[0, 0].set_ylabel('Frequency')
+    
     #sqfootage vs price
+    axes[0, 1].scatter(data['square_footage'], data['price'], alpha=0.6, s=20)
+    axes[0, 1].set_title('Square Footage vs Price')
+    axes[0, 1].set_xlabel('Square Footage')
+    axes[0, 1].set_ylabel('Price ($)')
+
     #bedrooms v price
+    data.boxplot(column='price', by='bedrooms', ax=axes[0, 2])
+    axes[0, 2].set_title('Price by Number of Bedrooms')
+    axes[0, 2].set_xlabel('Bedrooms')
+
     #age v price
+    axes[1, 0].scatter(data['age'], data['price'], alpha=0.6, s=20, color='orange')
+    axes[1, 0].set_title('Age vs Price')
+    axes[1, 0].set_xlabel('Age (years)')
+    axes[1, 0].set_ylabel('Price ($)')
+
     #location v price
+    axes[1, 1].scatter(data['location_score'], data['price'], alpha=0.6, s=20, color='green')
+    axes[1, 1].set_title('Location Score vs Price')
+    axes[1, 1].set_xlabel('Location Score')
+    axes[1, 1].set_ylabel('Price ($)')
+
     #correlation heatmap?
+    correlation = data.corr()
+    sns.heatmap(correlation, annot=True, cmap='coolwarm', center=0, ax=axes(1, 2))
+    axes[1, 2].set_title('Feature Correlations')
+
+    plt.tight_layout()
+    plt.show()
+
+    print("\n === Data Summary ===")
+    print(data.describe())
+    print(f"\nDataset shape: {data.shape}")
+    print(f"Missing values: {data.isnull().sum().sum()}")
+    
+def prepare_data_for_training(data, test_split=0.2):
+    """
+    Prepare data for training - split and convert into pytorch tensors
+    """
+
