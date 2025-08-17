@@ -100,4 +100,17 @@ def prepare_data_for_training(data, test_split=0.2):
     """
     Prepare data for training - split and convert into pytorch tensors
     """
+    features = ['square_footage', 'bedrooms', 'age', 'location_score']
+    X = data[features].values
+    y = data['price'].values.reshape(-1, 1) #2d ify that thing
+
+    n_train = int(len(data)) * (1 - test_split)
+
+    X_train, X_test = X[:n_train], X[n_train:]
+    y_train, y_test = y[:n_train], y[n_train:]
+
+    scaler_X = StandardScaler()
+    scaler_y = StandardScaler()
+
+    #finish
 
