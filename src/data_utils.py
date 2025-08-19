@@ -16,7 +16,7 @@ def generate_housing_data(n_samples=1000):
     square_footage = np.random.normal(2000, 800, n_samples)
     square_footage = np.clip(square_footage, 500, 5000)
 
-    bedrooms = np.random.choice([1, 2, 3, 4, 5, ], n_samples, p=[0.1, 0.25, 0.35, 0.35, 0.05])
+    bedrooms = np.random.choice([1, 2, 3, 4, 5], n_samples, p=[0.1, 0.25, 0.35, 0.25, 0.05])
 
     age = np.random.exponential(15, n_samples)
     age = np.clip(age, 0, 100)
@@ -85,7 +85,7 @@ def explore_data(data):
 
     #correlation heatmap?
     correlation = data.corr()
-    sns.heatmap(correlation, annot=True, cmap='coolwarm', center=0, ax=axes(1, 2))
+    sns.heatmap(correlation, annot=True, cmap='coolwarm', center=0, ax=axes[1, 2])
     axes[1, 2].set_title('Feature Correlations')
 
     plt.tight_layout()
@@ -112,5 +112,42 @@ def prepare_data_for_training(data, test_split=0.2):
     scaler_X = StandardScaler()
     scaler_y = StandardScaler()
 
-    #finish
+    X_train_scaled = scaler_X.fit_transform(X_train)
+    X_test_scaled = scaler_X.transform(X_test)
+    y_train_scaled = scaler_y.fit_transform(y_train)
+    y_test_scaled = scaler_y.transform(y_test)
 
+    #convert to tensors
+    X_train_tensor = torch.FloatTensor(X_train_scaled)
+    X_test_tensor = torch.FloatTensor(X_test_scaled)
+    y_train_tensor = torch.FloatTensor(y_train_scaled)
+    y_test_tensor = torch.FloatTensor(y_test_scaled)
+
+    print(f"Training set: {X_train_tensor.shape[0]} samples")
+    print(f"Test set: {X_test_tensor.shape[0]} samples")
+    print(f"Features: {X_train_tensor.shape[1]}")
+    
+    return {
+        'X_train': X_train_tensor,
+        'X_test': X_test_tensor,
+        'y_train': y_train_tensor,
+        'y_test': y_test_tensor,
+        'scaler_X': scaler_X,
+        'scaler_y': scaler_y,
+        'feature_names': features
+    }
+
+if __name__ == "__main__":
+    print("Generating Housing Dataset...")
+
+    housing_data = generate_housing_data(n_samples=1000)
+    
+    explore_data(housing_data)
+
+    data_dict = prepare_data_for_training(housing_data)
+
+    print("\n Data ready for training.")
+    print("Next step: Implement linear regression model")
+
+    housing_data.to_csv('data/housing_data.csv', index=False)
+    print("Data saved to 'data/housing_data.csv'")

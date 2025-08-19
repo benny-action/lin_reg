@@ -1,13 +1,11 @@
-from math import sqrt
+import torch
+import torch.nn as nn
 import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.metrics import r2_score, mean_squared_error
+import math
 
-def rmse_metric(actual, predicted):
-    sum_error = 0.0
-    for y, y_hat in zip(actual,predicted):
-        prediction_error = y - y_hat
-        sum_error += (prediction_error ** 2)
-    mean_error = sum_error / float(len(actual))
-    return sqrt(mean_error)
-
-def compute_coefficient(x, y):
-    n = len(x)
+class LinearRegressionScratch:
+    """
+    Linear regression implemented from scratch to understand the fundamentals
+    """
